@@ -8,6 +8,7 @@ use backend\models\buscadores\AuthRuleBuscador;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * AuthRuleController implements the CRUD actions for AuthRule model.
@@ -20,6 +21,19 @@ class AuthRuleController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index','view','create','update','delete'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ]
+                ],
+                'denyCallback' => function ($rule, $action) {
+                    $this->goHome();
+                }
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

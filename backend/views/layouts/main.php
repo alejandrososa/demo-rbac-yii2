@@ -34,36 +34,36 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        [
-            'label' => 'Home',
-            'url' => ['/site/index'],
-//            'visible' => \Yii::$app->user->can('admin')
-        ],
-        [
-            'label' => 'Administracion',
-            'items' => [
-                ['label' => 'Usuarios', 'url' => ['/usuarios/index']],
-                '<li class="divider"></li>',
-                '<li class="dropdown-header">roles y autorizaciones</li>',
-                ['label' => 'Roles y reglas', 'url' => ['/rbac/auth-item']],
-                ['label' => 'Asignaciones', 'url' => ['/rbac/auth-assignment']],
-                ['label' => 'Reglas', 'url' => ['/rbac/auth-rule']],
-            ],
-//            'visible' => \Yii::$app->user->can('admin')
-        ],
-        [
-            'label' => 'Analytics',
-            'items' => [
-                ['label' => 'Global Analytics', 'url' => ['/analytics/index']],
-                ['label' => 'Profession & Location', 'url' => ['/analytics/profession']],
-            ],
-//            'visible' => (\Yii::$app->user->can('admin') || \Yii::$app->user->can('investor'))
-        ]
-    ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
+        $menuItems = [
+            [
+                'label' => 'Home',
+                'url' => ['/site/index'],
+            ],
+            [
+                'label' => 'Administracion',
+                'items' => [
+                    ['label' => 'Usuarios', 'url' => ['/usuarios/index']],
+                    '<li class="divider"></li>',
+                    '<li class="dropdown-header">roles y autorizaciones</li>',
+                    ['label' => 'Roles y reglas', 'url' => ['/rbac/auth-item']],
+                    ['label' => 'Asignaciones', 'url' => ['/rbac/auth-assignment']],
+                    ['label' => 'Reglas', 'url' => ['/rbac/auth-rule']],
+                ],
+                'visible' => \Yii::$app->user->can('admin')
+            ],
+            [
+                'label' => 'Facturas',
+                'url' => ['/facturas/index'],
+                'visible' => (
+                    \Yii::$app->user->can('admin') ||
+                    \Yii::$app->user->can('empleado') ||
+                    \Yii::$app->user->can('vendedor')
+                )
+            ]
+        ];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(

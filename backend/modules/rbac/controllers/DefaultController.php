@@ -3,6 +3,7 @@
 namespace backend\modules\rbac\controllers;
 
 use yii\web\Controller;
+use yii\filters\AccessControl;
 
 /**
  * Default controller for the `rbac` module

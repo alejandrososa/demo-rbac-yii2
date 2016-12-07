@@ -88,4 +88,12 @@ class AuthToken extends \yii\db\ActiveRecord
     {
         return new \common\models\scopes\AuthTokenQuery(get_called_class());
     }
+
+    /**
+     * Generates token authentication key
+     */
+    public function generateToken()
+    {
+        $this->token = Yii::$app->security->generateRandomString();
+    }
 }

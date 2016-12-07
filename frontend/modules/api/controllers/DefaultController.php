@@ -61,6 +61,11 @@ class DefaultController extends ActiveController
                         'actions' => ['index'],
                         'roles' => ['particular'],
                     ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['admin'],
+                    ],
                 ],
                 'denyCallback' => function ($rule, $action) {
                     throw new ForbiddenHttpException(Yii::t('app','No tienes permiso para acceder a {action}', [
@@ -71,7 +76,7 @@ class DefaultController extends ActiveController
             //negociador
             [
                 'class' => ContentNegotiator::className(),
-                'only' => ['view', 'index'],  // in a controller
+                'only' => ['view', 'index','create'],  // in a controller
                 // if in a module, use the following IDs for user actions
                 // 'only' => ['user/view', 'user/index']
                 'formats' => [

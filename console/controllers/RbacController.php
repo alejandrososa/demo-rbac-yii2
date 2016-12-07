@@ -281,8 +281,22 @@ class RbacController extends Controller{
      * Revoca rol particular de un usuario
      * @param string $correo
      */
-    public function actionRevocarparticular($correo) {
+    public function actionRevocarParticular($correo) {
         $this->gestionarRol(self::USUARIO_PARTICULAR, $correo, false);
+    }
+    /**
+     * Asignar rol de vendedor a un usuario
+     * @param string $correo
+     */
+    public function actionAsignarVendedor($correo) {
+        $this->gestionarRol(self::USUARIO_VENDEDOR, $correo, true);
+    }
+    /**
+     * Revoca rol vendedor de un usuario
+     * @param string $correo
+     */
+    public function actionRevocarVendedor($correo) {
+        $this->gestionarRol(self::USUARIO_VENDEDOR, $correo, false);
     }
     /**
      * Gestiona rol (administrador, particular, vendedor, empresa, inversor, empleado) de un usuario

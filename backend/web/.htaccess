@@ -1,3 +1,5 @@
+#RewriteBase /appdemoyii2/backend/web
+
 # use mod_rewrite for pretty URL support
 RewriteEngine on
 # If a directory or a file exists, use the request directly

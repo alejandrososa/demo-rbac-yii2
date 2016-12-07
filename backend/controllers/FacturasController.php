@@ -1,19 +1,19 @@
 <?php
 
-namespace backend\modules\rbac\controllers;
+namespace backend\controllers;
 
 use Yii;
-use common\models\AuthItem;
-use backend\models\buscadores\AuthItemBuscador;
+use common\models\Facturas;
+use backend\models\buscadores\FacturasBuscador;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 /**
- * AuthItemController implements the CRUD actions for AuthItem model.
+ * FacturasController implements the CRUD actions for Facturas model.
  */
-class AuthItemController extends Controller
+class FacturasController extends Controller
 {
     /**
      * @inheritdoc
@@ -25,14 +25,30 @@ class AuthItemController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index','view','create','update','delete'],
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['logout', 'index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['create','view'],
+                        'allow' => true,
+                        'roles' => ['vendedor'],
+                    ],
+                    [
+                        'actions' => ['create','view','update'],
+                        'allow' => true,
+                        'roles' => ['empleado'],
+                    ],
+                    [
+                        'actions' => ['delete','create','view','delete'],
                         'allow' => true,
                         'roles' => ['admin'],
-                    ]
+                    ],
                 ],
-                'denyCallback' => function ($rule, $action) {
-                    $this->goHome();
-                }
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -44,12 +60,12 @@ class AuthItemController extends Controller
     }
 
     /**
-     * Lists all AuthItem models.
+     * Lists all Facturas models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new AuthItemBuscador();
+        $searchModel = new FacturasBuscador();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -59,8 +75,8 @@ class AuthItemController extends Controller
     }
 
     /**
-     * Displays a single AuthItem model.
-     * @param string $id
+     * Displays a single Facturas model.
+     * @param integer $id
      * @return mixed
      */
     public function actionView($id)
@@ -71,16 +87,16 @@ class AuthItemController extends Controller
     }
 
     /**
-     * Creates a new AuthItem model.
+     * Creates a new Facturas model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new AuthItem();
+        $model = new Facturas();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->name]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -89,9 +105,9 @@ class AuthItemController extends Controller
     }
 
     /**
-     * Updates an existing AuthItem model.
+     * Updates an existing Facturas model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionUpdate($id)
@@ -99,7 +115,7 @@ class AuthItemController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->name]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -108,9 +124,9 @@ class AuthItemController extends Controller
     }
 
     /**
-     * Deletes an existing AuthItem model.
+     * Deletes an existing Facturas model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
@@ -121,15 +137,15 @@ class AuthItemController extends Controller
     }
 
     /**
-     * Finds the AuthItem model based on its primary key value.
+     * Finds the Facturas model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return AuthItem the loaded model
+     * @param integer $id
+     * @return Facturas the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = AuthItem::findOne($id)) !== null) {
+        if (($model = Facturas::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
