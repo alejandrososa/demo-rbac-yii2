@@ -1,0 +1,11 @@
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            url: http://localhost/appdemoyii2adv/frontend/web/
+            browser: chrome
+        - Yii2:
+            part: init
+             part: [orm, fixtures] # allow to use AR methods
+             cleanup: false # don't wrap test in transaction
+             entryScript: index-test.php
