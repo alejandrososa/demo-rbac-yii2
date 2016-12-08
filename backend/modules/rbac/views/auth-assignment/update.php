@@ -4,6 +4,8 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\AuthAssignment */
+/* @var $roles backend\models\Roles */
+/* @var $usuarios backend\models\Usuarios */
 
 $this->title = 'Update Auth Assignment: ' . $model->item_name;
 $this->params['breadcrumbs'][] = ['label' => 'Auth Assignments', 'url' => ['index']];
@@ -16,6 +18,8 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'roles' => $roles,
+        'usuarios' => $usuarios,
     ]) ?>
 
 </div>

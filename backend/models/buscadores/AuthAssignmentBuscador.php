@@ -12,13 +12,15 @@ use common\models\AuthAssignment;
  */
 class AuthAssignmentBuscador extends AuthAssignment
 {
+    public $usuario;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['item_name', 'user_id'], 'safe'],
+            [['item_name', 'user_id', 'usuario'], 'safe'],
             [['created_at'], 'integer'],
         ];
     }
@@ -43,11 +45,22 @@ class AuthAssignmentBuscador extends AuthAssignment
     {
         $query = AuthAssignment::find();
 
+        // Importante: relacionar las facturas con los usuarios por medio de la relacion usuario
+        $query->joinWith(['usuario']);
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        // Importante: aquí es cómo configuramos el orden asc o desc
+        // La clave es el nombre del atributo en nuestra instancia "FacturasBuscador"
+        $dataProvider->sort->attributes['usuario'] = [
+            // Las tablas con las que nuestra relación está configurada
+            'asc' => ['user.email' => SORT_ASC],
+            'desc' => ['user.email' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -60,6 +73,11 @@ class AuthAssignmentBuscador extends AuthAssignment
         // grid filtering conditions
         $query->andFilterWhere([
             'created_at' => $this->created_at,
+        ]);
+
+        //filtro de relaciones entre usuario y factura
+        $query->andFilterWhere([
+            'like','user.email', $this->usuario,
         ]);
 
         $query->andFilterWhere(['like', 'item_name', $this->item_name])

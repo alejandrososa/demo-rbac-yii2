@@ -35,7 +35,7 @@ class m161207_141852_create_facturas_table extends Migration
             'cantidad' => $this->integer()->defaultValue(1)->notNull(),
             'concepto' => $this->string(70)->notNull(),
             'descripcion' => $this->text(),
-            'empleado' => $this->integer()->notNull(),
+            'empleado_id' => $this->integer()->notNull(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ]);
@@ -44,13 +44,13 @@ class m161207_141852_create_facturas_table extends Migration
         $this->createIndex(
             'idx-' . $this->tbl_facturas . '-empleado',
             $this->tbl_facturas,
-            'empleado'
+            'empleado_id'
         );
         //clave foranea a `usuarios`
         $this->addForeignKey(
             'fk-' . $this->tbl_facturas . '-empleado',
             $this->tbl_facturas,
-            'empleado',
+            'empleado_id',
             $this->tbl_usuarios,
             'id',
             self::TIPO_CASCADE,
@@ -63,6 +63,6 @@ class m161207_141852_create_facturas_table extends Migration
      */
     public function down()
     {
-//        $this->dropTable($this->tbl_facturas);
+        $this->dropTable($this->tbl_facturas);
     }
 }

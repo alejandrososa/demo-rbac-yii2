@@ -1,4 +1,7 @@
 <?php
+
+use yii\web\UrlNormalizer;
+
 $params = array_merge(
     require(__DIR__ . '/../../common/config/params.php'),
     require(__DIR__ . '/../../common/config/params-local.php'),
@@ -15,6 +18,12 @@ return [
     'modules' => [
         'rbac' => [
             'class' => 'backend\modules\rbac\Modulo',
+        ],
+        'facturas' => [
+            'class' => 'backend\modules\facturas\Modulo',
+        ],
+        'cuentas' => [
+            'class' => 'backend\modules\cuentas\Modulo',
         ],
     ],
     'components' => [
@@ -45,7 +54,22 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'normalizer' => [
+                'class' => 'yii\web\UrlNormalizer',
+                'action' => UrlNormalizer::ACTION_REDIRECT_TEMPORARY, // use temporary redirection instead of permanent
+            ],
             'rules' => [
+                //'<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+
+                //modulo facturas
+                '<modules:(facturas)>'=>'<module>/facturas/index',
+                '<module:(facturas)>/<controller:\w+>'=>'<module>/facturas/index',
+                '<module:(facturas)>/<action:\w+>/<id:\d+>'=>'<module>/facturas/<action>',
+
+                //modulo cuentas
+                '<modules:(cuentas)>'=>'<module>/usuarios/index',
+                '<module:(cuentas)>/<controller:\w+>'=>'<module>/usuarios/index',
+                '<module:(cuentas)>/<action:\w+>/<id:\d+>'=>'<module>/usuarios/<action>',
             ],
         ],
     ],

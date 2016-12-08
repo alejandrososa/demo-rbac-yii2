@@ -2,20 +2,19 @@
 /**
  * Creado para PhpStorm.
  * Desarrollador: grace
- * Fecha: 6/12/16 - 22:01
+ * Fecha: 6/12/16 - 21:54
  */
 
 namespace console\rbac;
 
-
-use yii\rbac\Rule;
+use console\rbac\ReglasAbstractas;
 
 /**
  * Comprueba si el propietario ID coincide usuario pasado a través de params
  */
-class DescuentoCrearRule extends Rule {
+class EditarAjenaFacturaRule extends ReglasAbstractas {
 
-    public $name = 'crearDescuentos';
+    public $name = 'editarFacturasAjenas';
 
     /**
      * @param string|integer $user the user ID.
@@ -24,7 +23,11 @@ class DescuentoCrearRule extends Rule {
      * @return boolean a value indicating whether the rule permits the role or permission it is associated with.
      */
     public function execute($user, $item, $params) {
-        return isset($params['descuento']) ? $params['descuento']->user_id == $user : false;
+        if(!$this->usuarioTienePermisoEspecial($this->name, $user)){
+            return false;
+        }
+
+        return isset($params['factura']) ? $params['factura']->empleado_id !== $user : false;
     }
 
 }

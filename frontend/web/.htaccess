@@ -1,4 +1,4 @@
-RewriteBase /appdemoyii2/frontend/web
+#RewriteBase /appdemoyii2/frontend/web
 
 # use mod_rewrite for pretty URL support
 RewriteEngine on

@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Facturas */
+/* @var $model backend\models\Usuarios */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Facturas', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Usuarios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="facturas-view">
+<div class="usuarios-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,11 +29,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'codigo',
-            'cantidad',
-            'concepto',
-            'descripcion:ntext',
-            'empleado',
+            'username',
+            'auth_key',
+            'password_hash',
+            'password_reset_token',
+            'email:email',
+            'status',
             'created_at',
             'updated_at',
         ],

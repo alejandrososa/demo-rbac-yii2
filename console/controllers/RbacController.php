@@ -13,11 +13,11 @@ use yii\helpers\Console;
 use yii\console\Controller;
 use common\models\User;
 use common\models\AuthAssignment;
-use console\rbac\ArticuloPropietarioRule;
-use console\rbac\ArticuloEmpleadoRule;
-use console\rbac\ArticuloCrearRule;
-use console\rbac\DescuentoCrearRule;
-use console\rbac\DescuentoEditarRule;
+use console\rbac\CrearFacturaRule;
+use console\rbac\EditarAjenaFacturaRule;
+use console\rbac\EditarPropiaFacturaRule;
+use console\rbac\EliminarFacturaRule;
+
 /**
  * Class RbacController
  * @package console\controllers
@@ -32,15 +32,16 @@ class RbacController extends Controller{
     const USUARIO_EMPLEADO = 'empleado';
 
     //tipos de permisos
-    const P_CREAR_ARTICULOS = 'crearArticulos';
-    const P_CREAR_DESCUENTOS = 'crearDescuentos';
-    const P_EDITAR_ARTICULOS_PROPIOS = 'editarArticulosPropios';
-    const P_EDITAR_ARTICULOS_AJENOS = 'editarArticulosAjenos';
-    const P_EDITAR_DESCUENTOS = 'editarDescuentos';
+    const P_CREAR_FACTURAS = 'crearFacturas';
+    const P_ELIMINAR_FACTURAS = 'eliminarFacturas';
+    const P_EDITAR_FACTURAS_AJENAS = 'editarFacturasAjenas';
+    const P_EDITAR_FACTURAS_PROPIAS = 'editarFacturasPropias';
+
     //administradores
     private $administradores = [
         'alesjohnson@hotmail.com'
     ];
+
     //demos particulares
     private $particulares = [
         'demo1@correo.com',
@@ -61,57 +62,52 @@ class RbacController extends Controller{
      * @var array Array de reglas: classnames
      */
     private $reglas = [
-        ArticuloCrearRule::class,
-        ArticuloPropietarioRule::class,
-        ArticuloEmpleadoRule::class,
-        DescuentoCrearRule::class,
-        DescuentoEditarRule::class,
+        CrearFacturaRule::class,
+        EditarPropiaFacturaRule::class,
+        EditarAjenaFacturaRule::class,
+        EliminarFacturaRule::class,
     ];
     /**
      * @var array Array de permisos
      */
     private $permissions = [
-        self::P_CREAR_ARTICULOS => [
-            'description' => 'Permiso para crear articulos',
-            'ruleName' => 'crearArticulo',
+        self::P_CREAR_FACTURAS => [
+            'description' => 'Permiso para crear facturas',
+            'ruleName' => 'crearFacturas',
         ],
-        self::P_CREAR_DESCUENTOS => [
-            'description' => 'Permiso para crear descuentos',
-            'ruleName' => 'crearDescuentos',
+        self::P_EDITAR_FACTURAS_PROPIAS => [
+            'description' => 'Permiso para actualizar facturas propias',
+            'ruleName' => 'editarFacturasPropias',
         ],
-        self::P_EDITAR_ARTICULOS_PROPIOS => [
-            'description' => 'Permiso para actualizar articulos propios',
-            'ruleName' => 'esArticuloPropietario',
+        self::P_EDITAR_FACTURAS_AJENAS => [
+            'description' => 'Permiso para actualizar facturas de otros usuarios',
+            'ruleName' => 'editarFacturasAjenas',
         ],
-        self::P_EDITAR_ARTICULOS_AJENOS => [
-            'description' => 'Permiso para actualizar articulos de otros usuarios',
-            'ruleName' => 'esArticuloAjeno',
-        ],
-        self::P_EDITAR_DESCUENTOS => [
-            'description' => 'Permiso para actualizar descuentos',
-            'ruleName' => 'editarDescuento',
+        self::P_ELIMINAR_FACTURAS => [
+            'description' => 'Permiso para eliminar facturas',
+            'ruleName' => 'eliminarFacturas',
         ],
     ];
     /**
      * @var array Array de permisos asignados a un rol
      */
     private $rolPermisos = [
-        self::USUARIO_PARTICULAR    => [
-            self::P_CREAR_ARTICULOS,
-            self::P_EDITAR_ARTICULOS_PROPIOS,
-        ],
+        self::USUARIO_PARTICULAR    => [],
+        self::USUARIO_EMPRESA       => [],
         self::USUARIO_VENDEDOR      => [
-            self::P_CREAR_ARTICULOS,
-            self::P_EDITAR_ARTICULOS_PROPIOS,
-        ],
-        self::USUARIO_EMPRESA => [
-            self::P_EDITAR_ARTICULOS_PROPIOS,
-            self::P_CREAR_DESCUENTOS,
-            self::P_CREAR_ARTICULOS
+            self::P_CREAR_FACTURAS,
+            self::P_EDITAR_FACTURAS_PROPIAS,
         ],
         self::USUARIO_EMPLEADO => [
-            self::P_EDITAR_ARTICULOS_AJENOS,
-            self::P_EDITAR_DESCUENTOS,
+            self::P_CREAR_FACTURAS,
+            self::P_EDITAR_FACTURAS_AJENAS,
+            self::P_EDITAR_FACTURAS_PROPIAS,
+        ],
+        self::USUARIO_ADMIN => [
+            self::P_CREAR_FACTURAS,
+            self::P_EDITAR_FACTURAS_AJENAS,
+            self::P_EDITAR_FACTURAS_PROPIAS,
+            self::P_ELIMINAR_FACTURAS,
         ]
     ];
     /**
@@ -324,6 +320,7 @@ class RbacController extends Controller{
             $this->stdout("Rol fue revocado\n", Console::FG_GREEN);
         }
     }
+    
     /**
      * Verifica si un usuario ya tiene asignado un rol
      * @param $rol

@@ -65,6 +65,41 @@ class m130524_201442_init extends Migration
             self::TIPO_CASCADE,
             self::TIPO_NO_ACTION
         );
+
+
+        //usuarios demo
+        $this->batchInsert('{{%user}}',
+            [
+                'username',
+                'auth_key',
+                'password_hash',
+                'password_reset_token',
+                'email',
+                'status',
+                'created_at',
+                'updated_at'
+            ],
+            [
+                //password 123456
+                ['admin', '7ATWh6v7C3aoJAe-1J6EIlbHFOvOQkEl', '$2y$13$mAOVcVcoIydz5TvrbHwwWeOxjEwMGicl3MewYVANWDIMDQ.BAEPxW', NULL, 'admin@correo.com', 10, '1481143012','1481143012'],
+                ['particular', 'QXdym_EVgnxq6S1cMa5MefXXRo4FCE1b', '$2y$13$BVFgCffxBjycc6ZoQIr8L.paJslyI1txSUNK02k8SrziRDB0/vCkS', NULL, 'particular@correo.com', 10, '1481143012','1481143012'],
+                ['vendedor', 'pbHFQUoXoB6lURqZTF_NwNWH_zy3Wrc_', '$2y$13$XguulkXA.eIw1nqAnWCnBeULMLjobQUXhb7DnOSDBbhD5migt2Xyy', NULL, 'vendedor@correo.com', 10, '1481143012','1481143012'],
+                ['empleado', 'XFaTWhB0Ao09_cy1h-LZdQMiEHrCaMYi', '$2y$13$qxMLnsJCZg/NApoGKiHFy.v1TT9sIlwKE6EfBVlCjk2ZCSF8gfRlO', NULL, 'empleado@correo.com', 10, '1481143012','1481143012'],
+            ]);
+
+        $this->batchInsert('{{%authToken}}',
+            [
+                'user_id',
+                'token',
+                'created_at',
+            ],
+            [
+                //password 123456
+                [1, 'l1STFriemVGnSXEGkpNpWcY5XnKGBmSs', '1481143012'],
+                [2, 'I2LowN6s9m23JtVIY5KAojTu5-t2Nk91', '1481143012'],
+                [3, 'tFgX3AKgWoTSJNApcRGf9FZDdiuLrSpA', '1481143012'],
+                [4, '_RymZHzH9az5f-vrJmmoxOepuyhfT4yb', '1481143012'],
+            ]);
     }
 
     public function down()

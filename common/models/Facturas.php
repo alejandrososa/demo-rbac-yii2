@@ -14,11 +14,11 @@ use yii\db\BaseActiveRecord;
  * @property integer $cantidad
  * @property string $concepto
  * @property string $descripcion
- * @property integer $empleado
+ * @property integer $empleado_id
  * @property integer $created_at
  * @property integer $updated_at
  *
- * @property User $empleado0
+ * @property User $empleado
  */
 class Facturas extends \yii\db\ActiveRecord
 {
@@ -56,13 +56,13 @@ class Facturas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['cantidad', 'empleado'], 'integer'],
-            [['concepto', 'empleado',], 'required'],
+            [['cantidad', 'empleado_id'], 'integer'],
+            [['concepto', 'empleado_id',], 'required'],
             [['descripcion'], 'string'],
             [['codigo'], 'string', 'max' => 20],
             [['concepto'], 'string', 'max' => 70],
             [['codigo'], 'unique'],
-            [['empleado'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['empleado' => 'id']],
+            [['empleado_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['empleado_id' => 'id']],
         ];
     }
 
@@ -76,19 +76,19 @@ class Facturas extends \yii\db\ActiveRecord
             'codigo' => 'Codigo',
             'cantidad' => 'Cantidad',
             'concepto' => 'Concepto',
-            'descripcion' => 'Descripcion',
-            'empleado' => 'Empleado',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'descripcion' => 'Descripción',
+            'empleado_id' => 'Empleado',
+            'created_at' => 'Creado',
+            'updated_at' => 'Editado',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEmpleado0()
+    public function getEmpleado()
     {
-        return $this->hasOne(User::className(), ['id' => 'empleado']);
+        return $this->hasOne(User::className(), ['id' => 'empleado_id']);
     }
 
     /**

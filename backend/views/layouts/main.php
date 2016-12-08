@@ -45,11 +45,11 @@ AppAsset::register($this);
             [
                 'label' => 'Administracion',
                 'items' => [
-                    ['label' => 'Usuarios', 'url' => ['/usuarios/index']],
+                    ['label' => 'Usuarios', 'url' => ['/cuentas/index']],
                     '<li class="divider"></li>',
                     '<li class="dropdown-header">roles y autorizaciones</li>',
+                    ['label' => 'Autorizaciones', 'url' => ['/rbac/auth-assignment']],
                     ['label' => 'Roles y reglas', 'url' => ['/rbac/auth-item']],
-                    ['label' => 'Asignaciones', 'url' => ['/rbac/auth-assignment']],
                     ['label' => 'Reglas', 'url' => ['/rbac/auth-rule']],
                 ],
                 'visible' => \Yii::$app->user->can('admin')
@@ -60,6 +60,7 @@ AppAsset::register($this);
                 'visible' => (
                     \Yii::$app->user->can('admin') ||
                     \Yii::$app->user->can('empleado') ||
+                    \Yii::$app->user->can('particular') ||
                     \Yii::$app->user->can('vendedor')
                 )
             ]

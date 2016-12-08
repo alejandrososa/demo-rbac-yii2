@@ -43,10 +43,10 @@ return [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-//            'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'pluralize' => false, 'controller' => 'api/default'],
+                ['class' => 'yii\rest\UrlRule', 'pluralize' => false, 'controller' => 'api/factura'],
             ],
         ],
         'request' => [

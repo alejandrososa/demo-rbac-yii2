@@ -14,6 +14,7 @@ use yii\db\BaseActiveRecord;
  * @property integer $created_at
  *
  * @property AuthItem $itemName
+ * @property User $usuario
  */
 class AuthAssignment extends \yii\db\ActiveRecord
 {
@@ -63,9 +64,9 @@ class AuthAssignment extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'item_name' => 'Item Name',
-            'user_id' => 'User ID',
-            'created_at' => 'Created At',
+            'item_name' => 'Rol',
+            'user_id' => 'Usuario',
+            'created_at' => 'Fecha',
         ];
     }
 
@@ -75,6 +76,14 @@ class AuthAssignment extends \yii\db\ActiveRecord
     public function getItemName()
     {
         return $this->hasOne(AuthItem::className(), ['name' => 'item_name']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsuario()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
     /**

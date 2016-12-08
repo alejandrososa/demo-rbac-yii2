@@ -12,14 +12,17 @@ use common\models\Facturas;
  */
 class FacturasBuscador extends Facturas
 {
+    public $empleado;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'cantidad', 'empleado', 'created_at', 'updated_at'], 'integer'],
-            [['codigo', 'concepto', 'descripcion'], 'safe'],
+            [['id', 'cantidad', 'created_at', 'updated_at'], 'integer'],
+            [['empleado'], 'string'],
+            [['codigo', 'concepto', 'descripcion', 'empleado'], 'safe'],
         ];
     }
 
@@ -43,11 +46,22 @@ class FacturasBuscador extends Facturas
     {
         $query = Facturas::find();
 
+        // Importante: relacionar las facturas con los usuarios por medio de la relacion empleado
+        $query->joinWith(['empleado']);
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        // Importante: aquí es cómo configuramos el orden asc o desc
+        // La clave es el nombre del atributo en nuestra instancia "FacturasBuscador"
+        $dataProvider->sort->attributes['empleado'] = [
+            // Las tablas con las que nuestra relación está configurada
+            'asc' => ['user.username' => SORT_ASC],
+            'desc' => ['user.username' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -61,9 +75,13 @@ class FacturasBuscador extends Facturas
         $query->andFilterWhere([
             'id' => $this->id,
             'cantidad' => $this->cantidad,
-            'empleado' => $this->empleado,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+        ]);
+
+        //filtro de relaciones entre usuario y factura
+        $query->andFilterWhere([
+            'user.username' => $this->empleado,
         ]);
 
         $query->andFilterWhere(['like', 'codigo', $this->codigo])

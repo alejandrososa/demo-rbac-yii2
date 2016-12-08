@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\buscadores\AuthAssignmentBuscador */
+/* @var $searchModel backend\models\buscadores\AuthAssignmentBuscador */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Auth Assignments';
@@ -25,9 +25,17 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'item_name',
-            'user_id',
-            'created_at',
-
+            [
+                'class' => 'yii\grid\DataColumn',
+                'label' => 'Usuario',
+                'attribute' => 'usuario',
+                'value' => 'usuario.email',
+                'options' => ['width' => '110']
+            ],
+            [
+                'attribute' => 'created_at',
+                'format' =>  ['date', 'php:d-m-Y H:i:s'],
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

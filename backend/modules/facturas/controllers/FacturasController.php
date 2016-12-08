@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\modules\facturas\controllers;
 
 use Yii;
 use common\models\Facturas;
@@ -34,7 +34,7 @@ class FacturasController extends Controller
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['create','view'],
+                        'actions' => ['create','view','update'],
                         'allow' => true,
                         'roles' => ['vendedor'],
                     ],
@@ -44,7 +44,7 @@ class FacturasController extends Controller
                         'roles' => ['empleado'],
                     ],
                     [
-                        'actions' => ['delete','create','view','delete'],
+                        'actions' => ['update','create','view','delete'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -93,14 +93,18 @@ class FacturasController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Facturas();
+        if (Yii::$app->user->can('crearFacturas')) {
+            $model = new Facturas();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            if ($model->load(Yii::$app->request->post())) {
+                $model->empleado_id = Yii::$app->user->id;
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
         }
     }
 
@@ -114,13 +118,25 @@ class FacturasController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        //valida si son sus facturas o de otro usuario
+        //si el usuario tiene ambos o uno de los dos permisos puede editar la factura
+        $validaFacturasPropias = Yii::$app->user->can('editarFacturasPropias', ['factura' => $model]);
+        $validaFacturasAjenas = Yii::$app->user->can('editarFacturasAjenas', ['factura' => $model]);
+
+        if ($validaFacturasPropias || $validaFacturasAjenas) {
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
         }
+        Yii::$app->session->setFlash('error', Yii::t('app','No tienes permisos para editar factura: {factura}', [
+            'factura'=> $model->codigo
+        ]));
+        return $this->redirect(['index']);
     }
 
     /**
@@ -131,8 +147,15 @@ class FacturasController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        if (Yii::$app->user->can('eliminarFacturas')) {
+            $model->delete();
+            return $this->redirect(['index']);
+        }
 
+        Yii::$app->session->setFlash('error', Yii::t('app','No tienes permisos para eliminar factura: {factura}', [
+            'factura'=> $model->codigo
+        ]));
         return $this->redirect(['index']);
     }
 

@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\db\BaseActiveRecord;
+use common\models\scopes\AuthItemQuery;
 
 /**
  * This is the model class for table "auth_item".
@@ -130,5 +131,14 @@ class AuthItem extends \yii\db\ActiveRecord
     public function getParents()
     {
         return $this->hasMany(AuthItem::className(), ['name' => 'parent'])->viaTable('auth_item_child', ['child' => 'name']);
+    }
+
+    /**
+     * @inheritdoc
+     * @return AuthItemQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new AuthItemQuery(get_called_class());
     }
 }

@@ -6,15 +6,14 @@
  */
 
 namespace console\rbac;
-
-use yii\rbac\Rule;
+use console\rbac\ReglasAbstractas;
 
 /**
  * Comprueba si el propietario ID coincide usuario pasado a través de params
  */
-class ArticuloPropietarioRule extends Rule {
+class EliminarFacturaRule extends ReglasAbstractas {
 
-    public $name = 'esArticuloPropietario';
+    public $name = 'eliminarFacturas';
 
     /**
      * @param string|integer $user the user ID.
@@ -23,7 +22,6 @@ class ArticuloPropietarioRule extends Rule {
      * @return boolean a value indicating whether the rule permits the role or permission it is associated with.
      */
     public function execute($user, $item, $params) {
-        return isset($params['articulo']) ? $params['articulo']->user_id == $user : false;
+        return $this->usuarioTienePermisoEspecial($this->name, $user);
     }
-
 }

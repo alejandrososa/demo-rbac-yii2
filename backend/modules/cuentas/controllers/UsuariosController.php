@@ -1,21 +1,19 @@
 <?php
 
-namespace backend\modules\rbac\controllers;
+namespace backend\modules\cuentas\controllers;
 
 use Yii;
-use common\models\AuthAssignment;
 use backend\models\Usuarios;
-use backend\models\Roles;
-use backend\models\buscadores\AuthAssignmentBuscador;
+use backend\models\buscadores\CuentasBuscador;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 /**
- * AuthAssignmentController implements the CRUD actions for AuthAssignment model.
+ * UsuariosController implements the CRUD actions for Usuarios model.
  */
-class AuthAssignmentController extends Controller
+class UsuariosController extends Controller
 {
     /**
      * @inheritdoc
@@ -46,12 +44,12 @@ class AuthAssignmentController extends Controller
     }
 
     /**
-     * Lists all AuthAssignment models.
+     * Lists all Usuarios models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new AuthAssignmentBuscador();
+        $searchModel = new CuentasBuscador();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -61,89 +59,77 @@ class AuthAssignmentController extends Controller
     }
 
     /**
-     * Displays a single AuthAssignment model.
-     * @param string $item_name
-     * @param string $user_id
+     * Displays a single Usuarios model.
+     * @param integer $id
      * @return mixed
      */
-    public function actionView($item_name, $user_id)
+    public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($item_name, $user_id),
+            'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new AuthAssignment model.
+     * Creates a new Usuarios model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new AuthAssignment();
-        $modelUsuarios = Usuarios::listadoUsuarios();
-        $modelRoles = Roles::listadoRoles();
+        $model = new Usuarios();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'item_name' => $model->item_name, 'user_id' => $model->user_id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'usuarios' => $modelUsuarios,
-                'roles' => $modelRoles,
             ]);
         }
     }
 
     /**
-     * Updates an existing AuthAssignment model.
+     * Updates an existing Usuarios model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $item_name
-     * @param string $user_id
+     * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($item_name, $user_id)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($item_name, $user_id);
-        $modelUsuarios = Usuarios::listadoUsuarios();
-        $modelRoles = Roles::listadoRoles();
+        $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'item_name' => $model->item_name, 'user_id' => $model->user_id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'usuarios' => $modelUsuarios,
-                'roles' => $modelRoles,
             ]);
         }
     }
 
     /**
-     * Deletes an existing AuthAssignment model.
+     * Deletes an existing Usuarios model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $item_name
-     * @param string $user_id
+     * @param integer $id
      * @return mixed
      */
-    public function actionDelete($item_name, $user_id)
+    public function actionDelete($id)
     {
-        $this->findModel($item_name, $user_id)->delete();
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the AuthAssignment model based on its primary key value.
+     * Finds the Usuarios model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $item_name
-     * @param string $user_id
-     * @return AuthAssignment the loaded model
+     * @param integer $id
+     * @return Usuarios the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($item_name, $user_id)
+    protected function findModel($id)
     {
-        if (($model = AuthAssignment::findOne(['item_name' => $item_name, 'user_id' => $user_id])) !== null) {
+        if (($model = Usuarios::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
